@@ -1,12 +1,49 @@
 pins.touchSetMode(TouchTarget.P1, TouchTargetMode.Capacitive)
 pins.touchSetMode(TouchTarget.P2, TouchTargetMode.Capacitive)
+let x = false
+let y = false
+console.logValue("p1", pins.analogReadPin(AnalogPin.P1))
 let random = randint(3000, 10000)
-let is_pin1 = input.pinIsPressed(TouchPin.P1)
-let is_pin2 = input.pinIsPressed(TouchPin.P2)
+let start = false
 basic.forever(function on_forever() {
-    let is_pin1 = input.pinIsPressed(TouchPin.P1)
-    let is_pin2 = input.pinIsPressed(TouchPin.P2)
+    let start: boolean;
+    control.inBackground(function run_parallel() {
+        if (start == false) {
+            if (x == true) {
+                basic.showLeds(`
+                . # # . .
+                . # . # .
+                . # # . .
+                . # . # .
+                . # # . .
+                `)
+            }
+            
+            if (y == true) {
+                basic.showLeds(`
+                . . . . .
+                . . # . .
+                . # . # .
+                # # # # #
+                # . . . #
+                `)
+            }
+            
+            if (x && y == true) {
+                basic.showLeds(`
+                . . # # .
+                . # . . .
+                # . . . .
+                . # . . .
+                . . # # .
+                `)
+            }
+            
+        }
+        
+    })
     basic.pause(random)
+    start = true
     basic.showLeds(`
         . . . . .
         # # # # #
@@ -14,10 +51,7 @@ basic.forever(function on_forever() {
         # # # # #
         . . . . . `)
     music.playTone(Note.FSharp, music.beat(1500))
-    is_pin1 = input.pinIsPressed(TouchPin.P1)
-    is_pin2 = input.pinIsPressed(TouchPin.P2)
-    console.logValue("p1", is_pin1)
-    if (is_pin1 && is_pin2 == true) {
+    if (x && y == true) {
         basic.showLeds(`
             . # # # .
             . # . . #
@@ -27,11 +61,11 @@ basic.forever(function on_forever() {
             `)
     }
     
-    if (is_pin1 == true) {
+    if (x == true) {
         basic.showNumber(1)
     }
     
-    if (is_pin2 == true) {
+    if (y == true) {
         basic.showNumber(2)
     }
     
